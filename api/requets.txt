@@ -1,0 +1,13 @@
+curl -X POST -i http://localhost:5000/usuarios --data '{
+    "nome": "Alex",
+    "email": "aafonso.93@gmail",
+    "nick": "alexander",
+    "senha": "123"
+}'
+
+curl -X POST -i http://localhost:5000/login --data '{
+    "email": "aafonso.93@gmail",
+    "senha": "123"
+}'
+
+curl -X DELETE -i http://localhost:5000/usuarios/9

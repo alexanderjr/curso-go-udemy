@@ -1,14 +1,25 @@
 package main
 
 import (
+	"api/src/config"
 	"api/src/router"
 	"fmt"
 	"net/http"
+
+	log "github.com/sirupsen/logrus"
 )
 
 func main() {
-	fmt.Print("Rodando a API")
-	r := router.Gerar()
+	config.Carregar()
+	log.SetFormatter(&log.JSONFormatter{})
+	log.Info(
+		fmt.Sprintf("Rodando a API na porta %d", config.Porta),
+	)
 
-	http.ListenAndServe(":5000", r)
+	if err := http.ListenAndServe(
+		fmt.Sprintf(":%d", config.Porta),
+		router.Gerar(),
+	); err != nil {
+		panic(err)
+	}
 }
