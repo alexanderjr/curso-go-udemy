@@ -19,7 +19,7 @@ type Usuario struct {
 }
 
 func (usuario *Usuario) Preparar(etapa string) error {
-	if erro := usuario.validar(); erro != nil {
+	if erro := usuario.validar(etapa); erro != nil {
 		return erro
 	}
 
@@ -30,7 +30,7 @@ func (usuario *Usuario) Preparar(etapa string) error {
 	return nil
 }
 
-func (usuario *Usuario) validar() error {
+func (usuario *Usuario) validar(etapa string) error {
 	if usuario.Nome == "" {
 		return errors.New("o nome é obrigatório")
 	}
@@ -47,8 +47,12 @@ func (usuario *Usuario) validar() error {
 		return erro
 	}
 
+	if etapa == "atualizar" {
+		return nil
+	}
+
 	if usuario.Senha == "" {
-		return errors.New("o senha é obrigatório")
+		return errors.New("a senha é obrigatório")
 	}
 
 	return nil

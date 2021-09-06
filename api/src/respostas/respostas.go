@@ -10,6 +10,10 @@ func JSON(w http.ResponseWriter, statusCode int, dados interface{}) {
 	w.Header().Set("content-type", "application/json")
 	w.WriteHeader(statusCode)
 
+	if statusCode == http.StatusNoContent {
+		return
+	}
+
 	if erro := json.NewEncoder(w).Encode(dados); erro != nil {
 		log.Fatal(erro)
 	}

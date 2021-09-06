@@ -13,7 +13,7 @@ func main() {
 	config.Carregar()
 	log.SetFormatter(&log.JSONFormatter{})
 	log.Info(
-		fmt.Sprintf("Rodando a API na porta %d", config.Porta),
+		fmt.Sprintf("Rodanado a API na porta %d", config.Porta),
 	)
 
 	if err := http.ListenAndServe(

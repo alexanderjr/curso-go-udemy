@@ -151,10 +151,10 @@ func (repositorio Usuarios) DeletarPorID(id uint64) error {
 func (repositorio Usuarios) Atualizar(usuario modelos.Usuario) error {
 	statement, erro := repositorio.db.Query(
 		"UPDATE usuarios set nome = ?, email = ?, nick = ? WHERE id = ?",
-		usuario.ID,
 		usuario.Nome,
 		usuario.Email,
 		usuario.Nick,
+		usuario.ID,
 	)
 
 	if erro != nil {
