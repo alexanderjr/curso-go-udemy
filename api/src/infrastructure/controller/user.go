@@ -8,6 +8,8 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
+
+	logger "github.com/sirupsen/logrus"
 )
 
 type UsersController struct{}
@@ -29,6 +31,7 @@ func (u UsersController) Delete(w http.ResponseWriter, r *http.Request) {
 }
 
 func (u UsersController) Save(w http.ResponseWriter, r *http.Request) {
+	logger.Info("Begin UsersController@Save")
 	request, err := ioutil.ReadAll(r.Body)
 
 	if err != nil {
@@ -36,8 +39,8 @@ func (u UsersController) Save(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var user inputRequest.UserRequest
-	if err = json.Unmarshal(request, &user); err != nil {
+	var input inputRequest.UserRequest
+	if err = json.Unmarshal(request, &input); err != nil {
 		toError(w, http.StatusBadRequest, err)
 		return
 	}
@@ -52,14 +55,21 @@ func (u UsersController) Save(w http.ResponseWriter, r *http.Request) {
 	re := mysql.NewUserMySQLRepository(db)
 	service := service.NewUserService(re)
 
-	userAdded, err := service.Create(user.CreateDomainUser())
+	userAdded, err := service.Create(input.CreateDomainUser())
 
 	if err != nil {
+		if !service.ErrFromDomain(err) {
+			logger.Error("Err: ", err)
+			toError(w, http.StatusInternalServerError, ErrInternalServer)
+			return
+		}
+
 		toError(w, http.StatusBadRequest, err)
 		return
 	}
 
 	toJson(w, http.StatusCreated, presenter.ShowUser(*userAdded))
+	logger.Info("End UsersController@Save")
 }
 
 func NewUsersController() UsersController {

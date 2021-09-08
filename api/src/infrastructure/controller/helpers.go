@@ -2,9 +2,12 @@ package controller
 
 import (
 	"encoding/json"
+	"errors"
 	"log"
 	"net/http"
 )
+
+var ErrInternalServer = errors.New("Internal Server Error")
 
 func toJson(w http.ResponseWriter, statusCode int, dados interface{}) {
 	w.WriteHeader(statusCode)

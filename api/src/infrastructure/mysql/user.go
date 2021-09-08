@@ -12,6 +12,8 @@ type UserMySQLRepository struct {
 	db *sql.DB
 }
 
+const AlreadyExistsCode = 1062
+
 func NewUserMySQLRepository(db *sql.DB) *UserMySQLRepository {
 	return &UserMySQLRepository{db}
 }
@@ -31,7 +33,7 @@ func (r UserMySQLRepository) Create(user entity.User) (*entity.User, error) {
 			return nil, err
 		}
 
-		if me.Number == 1062 {
+		if me.Number == AlreadyExistsCode {
 			return nil, userDomain.ErrUserAlreadyExists
 		}
 

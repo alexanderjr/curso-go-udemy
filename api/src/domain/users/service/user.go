@@ -29,3 +29,7 @@ func (u UserService) Create(user entity.User) (*entity.User, error) {
 func NewUserService(r repository.UserRepository) UserService {
 	return UserService{repository: r}
 }
+
+func (u UserService) ErrFromDomain(err error) bool {
+	return errors.Is(err, ErrUserAlreadyExists)
+}
