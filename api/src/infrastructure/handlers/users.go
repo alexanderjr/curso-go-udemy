@@ -3,7 +3,7 @@ package handlers
 import (
 	"api/src/domain/users"
 	"api/src/infrastructure/mysql"
-	modelos "api/src/models"
+	rr "api/src/infrastructure/request"
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
@@ -35,7 +35,7 @@ func (u UsersController) Save(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var user modelos.Usuario
+	var user rr.UserRequest
 	if err = json.Unmarshal(request, &user); err != nil {
 		toError(w, http.StatusBadRequest, err)
 		return
