@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"api/src/infrastructure/handlers"
+	"api/src/infrastructure/controller"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -12,7 +12,7 @@ func Router() *mux.Router {
 
 	r.Headers("content-type", "application/json")
 
-	usersController := handlers.NewUsersController()
+	usersController := controller.NewUsersController()
 	r.HandleFunc("/usuarios", usersController.GetAll).Methods(http.MethodGet)
 	r.HandleFunc("/usuarios", usersController.Save).Methods(http.MethodPost)
 	r.HandleFunc("/usuarios/{usuarioId}", usersController.Find).Methods(http.MethodGet)
