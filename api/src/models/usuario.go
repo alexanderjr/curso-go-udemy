@@ -1,6 +1,7 @@
 package modelos
 
 import (
+	users "api/src/domain/users/entity"
 	"api/src/seguranca"
 	"errors"
 	"strings"
@@ -79,4 +80,14 @@ func (usuario *Usuario) Atualizar(usuarioAtualizado Usuario) {
 	usuario.Nome = usuarioAtualizado.Nome
 	usuario.Email = usuarioAtualizado.Email
 	usuario.Nick = usuarioAtualizado.Nick
+}
+
+func (usuario Usuario) CreateDomainUser() users.User {
+	return users.User{
+		Name:      usuario.Nome,
+		Email:     usuario.Email,
+		Nick:      usuario.Nick,
+		Password:  usuario.Senha,
+		CreatedAt: time.Now(),
+	}
 }
