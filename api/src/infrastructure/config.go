@@ -15,16 +15,16 @@ var (
 )
 
 func LoadVars() {
-	var erro error
+	var err error
 
-	if erro = godotenv.Load(); erro != nil {
-		log.Fatal(erro)
+	if err = godotenv.Load(); err != nil {
+		log.Fatal(err)
 	}
 
-	HttpPortAddress, erro = strconv.Atoi(os.Getenv("API_PORT"))
+	HttpPortAddress, err = strconv.Atoi(os.Getenv("API_PORT"))
 
-	if erro != nil {
-		HttpPortAddress = 9000
+	if err != nil {
+		HttpPortAddress = 5000
 	}
 
 	ConnectionStringDatabase = fmt.Sprintf(
