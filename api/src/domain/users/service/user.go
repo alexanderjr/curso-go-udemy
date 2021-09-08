@@ -31,5 +31,18 @@ func NewUserService(r repository.UserRepository) UserService {
 }
 
 func (u UserService) ErrFromDomain(err error) bool {
-	return errors.Is(err, ErrUserAlreadyExists)
+	domainErrors := []error{
+		ErrUserAlreadyExists,
+		entity.ErrInvalidEmail,
+		entity.ErrInvalidName,
+		entity.ErrInvalidNick,
+	}
+
+	for i := 0; i < len(domainErrors); i++ {
+		if errors.Is(err, domainErrors[i]) {
+			return true
+		}
+	}
+
+	return false
 }

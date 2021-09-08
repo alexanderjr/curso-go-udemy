@@ -58,8 +58,8 @@ func (u UsersController) Save(w http.ResponseWriter, r *http.Request) {
 	userAdded, err := service.Create(input.CreateDomainUser())
 
 	if err != nil {
+		logger.Error("Err: ", err)
 		if !service.ErrFromDomain(err) {
-			logger.Error("Err: ", err)
 			toError(w, http.StatusInternalServerError, ErrInternalServer)
 			return
 		}

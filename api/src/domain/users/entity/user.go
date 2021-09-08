@@ -8,9 +8,10 @@ import (
 )
 
 var (
-	ErrInvalidName  = errors.New("o nome é obrigatório")
-	ErrInvalidNick  = errors.New("o nick é obrigatório")
-	ErrInvalidEmail = errors.New("o email é obrigatório")
+	ErrInvalidName     = errors.New("o nome é obrigatório")
+	ErrInvalidNick     = errors.New("o nick é obrigatório")
+	ErrInvalidEmail    = errors.New("o email é obrigatório")
+	ErrInvalidPassword = errors.New("a senha é obrigatório")
 )
 
 type User struct {
@@ -36,7 +37,7 @@ func (u User) IsValid() error {
 	}
 
 	if u.Password == "" {
-		return errors.New("a senha é obrigatório")
+		return ErrInvalidPassword
 	}
 
 	return nil
