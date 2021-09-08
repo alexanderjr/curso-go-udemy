@@ -6,10 +6,17 @@ import (
 	"errors"
 )
 
-var ErrUserAlreadyExists = errors.New("user already exists")
+var (
+	ErrUserAlreadyExists = errors.New("user already exists")
+	ErrUserNotFound      = errors.New("user not found exists")
+)
 
 type UserService struct {
 	repository repository.UserRepository
+}
+
+func NewUserService(r repository.UserRepository) UserService {
+	return UserService{repository: r}
 }
 
 func (u UserService) Create(user entity.User) (*entity.User, error) {
@@ -36,8 +43,14 @@ func (u UserService) GetAll() ([]entity.User, error) {
 	return users, nil
 }
 
-func NewUserService(r repository.UserRepository) UserService {
-	return UserService{repository: r}
+func (u UserService) FindById(id int) (*entity.User, error) {
+	user, err := u.repository.FindById(id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return user, nil
 }
 
 func (u UserService) ErrFromDomain(err error) bool {

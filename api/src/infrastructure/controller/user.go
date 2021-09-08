@@ -1,14 +1,17 @@
 package controller
 
 import (
-	"api/src/domain/users/service"
+	domainService "api/src/domain/users/service"
 	"api/src/infrastructure/controller/presenter"
 	inputRequest "api/src/infrastructure/controller/request"
 	"api/src/infrastructure/mysql"
 	"encoding/json"
+	"errors"
 	"io/ioutil"
 	"net/http"
+	"strconv"
 
+	"github.com/gorilla/mux"
 	logger "github.com/sirupsen/logrus"
 )
 
@@ -24,7 +27,7 @@ func (u UsersController) GetAll(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 
 	re := mysql.NewUserMySQLRepository(db)
-	service := service.NewUserService(re)
+	service := domainService.NewUserService(re)
 
 	users, err := service.GetAll()
 
@@ -39,7 +42,43 @@ func (u UsersController) GetAll(w http.ResponseWriter, r *http.Request) {
 }
 
 func (u UsersController) Find(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Hello World"))
+	logger.Info("Begin UsersController@Save")
+
+	parametros := mux.Vars(r)
+
+	userId, erro := strconv.ParseUint(parametros["usuarioId"], 10, 64)
+
+	if erro != nil {
+		toError(w, http.StatusBadRequest, erro)
+		return
+	}
+
+	db, err := mysql.NewMySQLConnection()
+	if err != nil {
+		toError(w, http.StatusInternalServerError, err)
+		return
+	}
+	defer db.Close()
+
+	re := mysql.NewUserMySQLRepository(db)
+	service := domainService.NewUserService(re)
+
+	user, err := service.FindById(int(userId))
+
+	if err != nil {
+		logger.Error("Err: ", err)
+
+		if errors.Is(err, domainService.ErrUserNotFound) {
+			toError(w, http.StatusNotFound, err)
+			return
+		}
+
+		toError(w, http.StatusInternalServerError, ErrInternalServer)
+		return
+	}
+
+	toJson(w, http.StatusOK, presenter.ShowUser(*user))
+	logger.Info("End UsersController@Save")
 }
 
 func (u UsersController) Update(w http.ResponseWriter, r *http.Request) {
@@ -73,7 +112,7 @@ func (u UsersController) Save(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 
 	re := mysql.NewUserMySQLRepository(db)
-	service := service.NewUserService(re)
+	service := domainService.NewUserService(re)
 
 	userAdded, err := service.Create(input.CreateDomainUser())
 

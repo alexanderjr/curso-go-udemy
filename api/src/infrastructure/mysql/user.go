@@ -51,31 +51,62 @@ func (r UserMySQLRepository) Create(user entity.User) (*entity.User, error) {
 
 func (r UserMySQLRepository) GetAll() ([]entity.User, error) {
 	//TODO: add filter
-	linhas, erro := r.db.Query(
+	rows, err := r.db.Query(
 		"SELECT id, nome, nick, email, criadoEm from usuarios",
 	)
 
-	if erro != nil {
-		return nil, erro
+	if err != nil {
+		return nil, err
 	}
 
-	defer linhas.Close()
+	defer rows.Close()
 	var users []entity.User
 
-	for linhas.Next() {
+	for rows.Next() {
 		var u entity.User
-		if erro = linhas.Scan(
+		if err = rows.Scan(
 			&u.ID,
 			&u.Name,
 			&u.Nick,
 			&u.Email,
 			&u.CreatedAt,
-		); erro != nil {
-			return nil, erro
+		); err != nil {
+			return nil, err
 		}
 
 		users = append(users, u)
 	}
 
 	return users, nil
+}
+
+func (r UserMySQLRepository) FindById(id int) (*entity.User, error) {
+	rows, err := r.db.Query(
+		"SELECT id, nome, nick, email, criadoEm from usuarios WHERE id = ?", id,
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+	rows.Scan()
+	var u entity.User
+	hasUser := rows.Next()
+
+	if !hasUser {
+		return nil, userDomain.ErrUserNotFound
+	}
+
+	if err = rows.Scan(
+		&u.ID,
+		&u.Name,
+		&u.Nick,
+		&u.Email,
+		&u.CreatedAt,
+	); err != nil {
+		return nil, err
+	}
+
+	return &u, nil
 }
