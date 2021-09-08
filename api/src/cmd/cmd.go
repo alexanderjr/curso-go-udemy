@@ -17,7 +17,7 @@ func Execute() {
 		Name:  "Starting Users API",
 		Usage: "API who is resposible for our users",
 		Action: func(c *cli.Context) error {
-			infrastructure.Carregar()
+			infrastructure.LoadVars()
 			logrus.SetFormatter(&logrus.JSONFormatter{})
 			logrus.Info(
 				fmt.Sprintf("Rodanado a API na porta %d", infrastructure.Porta),

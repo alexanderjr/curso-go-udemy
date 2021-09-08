@@ -14,7 +14,7 @@ var (
 	Porta              = 0
 )
 
-func Carregar() {
+func LoadVars() {
 	var erro error
 
 	if erro = godotenv.Load(); erro != nil {
