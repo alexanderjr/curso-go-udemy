@@ -2,9 +2,9 @@ package controller
 
 import (
 	"api/src/domain/users/service"
+	"api/src/infrastructure/controller/presenter"
+	inputRequest "api/src/infrastructure/controller/request"
 	"api/src/infrastructure/mysql"
-	"api/src/infrastructure/presenter"
-	inputRequest "api/src/infrastructure/request"
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
