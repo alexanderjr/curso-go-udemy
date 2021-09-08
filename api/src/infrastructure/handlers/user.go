@@ -3,6 +3,7 @@ package handlers
 import (
 	"api/src/domain/users/service"
 	"api/src/infrastructure/mysql"
+	"api/src/infrastructure/presenter"
 	inputRequest "api/src/infrastructure/request"
 	"encoding/json"
 	"io/ioutil"
@@ -58,7 +59,7 @@ func (u UsersController) Save(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	toJson(w, http.StatusCreated, userAdded)
+	toJson(w, http.StatusCreated, presenter.ShowUser(*userAdded))
 }
 
 func NewUsersController() UsersController {
