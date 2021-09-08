@@ -1,7 +1,7 @@
-package users
+package service
 
 import (
-	users "api/src/domain/users/entity"
+	"api/src/domain/users/entity"
 	"api/src/domain/users/repository"
 	"errors"
 )
@@ -12,7 +12,7 @@ type UserService struct {
 	repository repository.UserRepository
 }
 
-func (u UserService) Create(user users.User) (*users.User, error) {
+func (u UserService) Create(user entity.User) (*entity.User, error) {
 	if err := user.IsValid(); err != nil {
 		return nil, err
 	}

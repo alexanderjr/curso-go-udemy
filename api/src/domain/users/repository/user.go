@@ -1,9 +1,7 @@
 package repository
 
-import (
-	users "api/src/domain/users/entity"
-)
+import "api/src/domain/users/entity"
 
 type UserRepository interface {
-	Create(user users.User) (*users.User, error)
+	Create(user entity.User) (*entity.User, error)
 }

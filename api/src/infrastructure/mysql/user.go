@@ -1,8 +1,8 @@
 package mysql
 
 import (
-	"api/src/domain/users"
-	entity "api/src/domain/users/entity"
+	"api/src/domain/users/entity"
+	userDomain "api/src/domain/users/service"
 	"database/sql"
 
 	"github.com/go-sql-driver/mysql"
@@ -32,7 +32,7 @@ func (r UserMySQLRepository) Create(user entity.User) (*entity.User, error) {
 		}
 
 		if me.Number == 1062 {
-			return nil, users.ErrUserAlreadyExists
+			return nil, userDomain.ErrUserAlreadyExists
 		}
 
 		return nil, err

@@ -1,9 +1,9 @@
 package handlers
 
 import (
-	"api/src/domain/users"
+	"api/src/domain/users/service"
 	"api/src/infrastructure/mysql"
-	rr "api/src/infrastructure/request"
+	inputRequest "api/src/infrastructure/request"
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
@@ -35,7 +35,7 @@ func (u UsersController) Save(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var user rr.UserRequest
+	var user inputRequest.UserRequest
 	if err = json.Unmarshal(request, &user); err != nil {
 		toError(w, http.StatusBadRequest, err)
 		return
@@ -49,7 +49,7 @@ func (u UsersController) Save(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 
 	re := mysql.NewUserMySQLRepository(db)
-	service := users.NewUserService(re)
+	service := service.NewUserService(re)
 
 	userAdded, err := service.Create(user.CreateDomainUser())
 

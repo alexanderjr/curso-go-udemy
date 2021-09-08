@@ -1,7 +1,7 @@
 package request
 
 import (
-	users "api/src/domain/users/entity"
+	"api/src/domain/users/entity"
 	"time"
 )
 
@@ -12,8 +12,8 @@ type UserRequest struct {
 	Senha string `json:"senha,omitempty`
 }
 
-func (u UserRequest) CreateDomainUser() users.User {
-	return users.User{
+func (u UserRequest) CreateDomainUser() entity.User {
+	return entity.User{
 		Name:      u.Nome,
 		Email:     u.Email,
 		Nick:      u.Nick,
