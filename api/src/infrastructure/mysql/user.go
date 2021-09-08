@@ -48,3 +48,34 @@ func (r UserMySQLRepository) Create(user entity.User) (*entity.User, error) {
 	user.ID = uint64(ultimoIdInserido)
 	return &user, nil
 }
+
+func (r UserMySQLRepository) GetAll() ([]entity.User, error) {
+	//TODO: add filter
+	linhas, erro := r.db.Query(
+		"SELECT id, nome, nick, email, criadoEm from usuarios",
+	)
+
+	if erro != nil {
+		return nil, erro
+	}
+
+	defer linhas.Close()
+	var users []entity.User
+
+	for linhas.Next() {
+		var u entity.User
+		if erro = linhas.Scan(
+			&u.ID,
+			&u.Name,
+			&u.Nick,
+			&u.Email,
+			&u.CreatedAt,
+		); erro != nil {
+			return nil, erro
+		}
+
+		users = append(users, u)
+	}
+
+	return users, nil
+}

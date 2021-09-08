@@ -15,7 +15,27 @@ import (
 type UsersController struct{}
 
 func (u UsersController) GetAll(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Hello World"))
+	logger.Info("Begin UsersController@Save")
+	db, err := mysql.NewMySQLConnection()
+	if err != nil {
+		toError(w, http.StatusInternalServerError, err)
+		return
+	}
+	defer db.Close()
+
+	re := mysql.NewUserMySQLRepository(db)
+	service := service.NewUserService(re)
+
+	users, err := service.GetAll()
+
+	if err != nil {
+		logger.Error("Err: ", err)
+		toError(w, http.StatusInternalServerError, ErrInternalServer)
+		return
+	}
+
+	toJson(w, http.StatusOK, presenter.ShowAllUser(users))
+	logger.Info("End UsersController@Save")
 }
 
 func (u UsersController) Find(w http.ResponseWriter, r *http.Request) {

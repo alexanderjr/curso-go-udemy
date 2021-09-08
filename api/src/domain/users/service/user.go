@@ -26,6 +26,16 @@ func (u UserService) Create(user entity.User) (*entity.User, error) {
 	return userAdded, nil
 }
 
+func (u UserService) GetAll() ([]entity.User, error) {
+	users, err := u.repository.GetAll()
+
+	if err != nil {
+		return nil, err
+	}
+
+	return users, nil
+}
+
 func NewUserService(r repository.UserRepository) UserService {
 	return UserService{repository: r}
 }
