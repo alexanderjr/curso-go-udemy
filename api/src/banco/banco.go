@@ -8,7 +8,7 @@ import (
 )
 
 func Conectar() (*sql.DB, error) {
-	db, erro := sql.Open("mysql", infrastructure.StringConexaoBanco)
+	db, erro := sql.Open("mysql", infrastructure.ConnectionStringDatabase)
 
 	if erro != nil {
 		return nil, erro

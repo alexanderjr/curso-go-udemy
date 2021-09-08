@@ -20,11 +20,11 @@ func Execute() {
 			infrastructure.LoadVars()
 			logrus.SetFormatter(&logrus.JSONFormatter{})
 			logrus.Info(
-				fmt.Sprintf("Rodanado a API na porta %d", infrastructure.Porta),
+				fmt.Sprintf("Rodando a API na porta %d", infrastructure.HttpPortAddress),
 			)
 
 			if err := http.ListenAndServe(
-				fmt.Sprintf(":%d", infrastructure.Porta),
+				fmt.Sprintf(":%d", infrastructure.HttpPortAddress),
 				router.Gerar(),
 			); err != nil {
 				panic(err)

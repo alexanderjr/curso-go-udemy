@@ -10,8 +10,8 @@ import (
 )
 
 var (
-	StringConexaoBanco = ""
-	Porta              = 0
+	ConnectionStringDatabase = ""
+	HttpPortAddress          = 0
 )
 
 func LoadVars() {
@@ -21,13 +21,13 @@ func LoadVars() {
 		log.Fatal(erro)
 	}
 
-	Porta, erro = strconv.Atoi(os.Getenv("API_PORT"))
+	HttpPortAddress, erro = strconv.Atoi(os.Getenv("API_PORT"))
 
 	if erro != nil {
-		Porta = 9000
+		HttpPortAddress = 9000
 	}
 
-	StringConexaoBanco = fmt.Sprintf(
+	ConnectionStringDatabase = fmt.Sprintf(
 		"%s:%s@/%s?charset=utf8&parseTime=True&loc=Local",
 		os.Getenv("DB_USUARIO"),
 		os.Getenv("DB_SENHA"),
