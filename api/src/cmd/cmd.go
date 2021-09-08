@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"api/src/config"
+	"api/src/infrastructure"
 	"api/src/router"
 	"fmt"
 	"log"
@@ -17,14 +17,14 @@ func Execute() {
 		Name:  "Starting Users API",
 		Usage: "API who is resposible for our users",
 		Action: func(c *cli.Context) error {
-			config.Carregar()
+			infrastructure.Carregar()
 			logrus.SetFormatter(&logrus.JSONFormatter{})
 			logrus.Info(
-				fmt.Sprintf("Rodanado a API na porta %d", config.Porta),
+				fmt.Sprintf("Rodanado a API na porta %d", infrastructure.Porta),
 			)
 
 			if err := http.ListenAndServe(
-				fmt.Sprintf(":%d", config.Porta),
+				fmt.Sprintf(":%d", infrastructure.Porta),
 				router.Gerar(),
 			); err != nil {
 				panic(err)
