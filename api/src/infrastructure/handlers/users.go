@@ -1,11 +1,9 @@
 package handlers
 
 import (
-	"api/src/banco"
 	"api/src/domain/users"
 	"api/src/infrastructure/mysql"
 	modelos "api/src/models"
-	"api/src/respostas"
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
@@ -33,19 +31,19 @@ func (u UsersController) Save(w http.ResponseWriter, r *http.Request) {
 	request, err := ioutil.ReadAll(r.Body)
 
 	if err != nil {
-		respostas.Erro(w, http.StatusUnprocessableEntity, err)
+		toError(w, http.StatusUnprocessableEntity, err)
 		return
 	}
 
 	var user modelos.Usuario
 	if err = json.Unmarshal(request, &user); err != nil {
-		respostas.Erro(w, http.StatusBadRequest, err)
+		toError(w, http.StatusBadRequest, err)
 		return
 	}
 
-	db, err := banco.Conectar()
+	db, err := mysql.NewMySQLConnection()
 	if err != nil {
-		respostas.Erro(w, http.StatusInternalServerError, err)
+		toError(w, http.StatusInternalServerError, err)
 		return
 	}
 	defer db.Close()
@@ -56,11 +54,11 @@ func (u UsersController) Save(w http.ResponseWriter, r *http.Request) {
 	userAdded, err := service.Create(user.CreateDomainUser())
 
 	if err != nil {
-		respostas.Erro(w, http.StatusBadRequest, err)
+		toError(w, http.StatusBadRequest, err)
 		return
 	}
 
-	respostas.JSON(w, http.StatusCreated, userAdded)
+	toJson(w, http.StatusCreated, userAdded)
 }
 
 func NewUsersController() UsersController {

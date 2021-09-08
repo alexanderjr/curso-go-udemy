@@ -1,4 +1,4 @@
-package respostas
+package handlers
 
 import (
 	"encoding/json"
@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-func JSON(w http.ResponseWriter, statusCode int, dados interface{}) {
+func toJson(w http.ResponseWriter, statusCode int, dados interface{}) {
 	w.WriteHeader(statusCode)
 
 	if statusCode == http.StatusNoContent {
@@ -18,8 +18,8 @@ func JSON(w http.ResponseWriter, statusCode int, dados interface{}) {
 	}
 }
 
-func Erro(w http.ResponseWriter, statusCode int, erro error) {
-	JSON(w, statusCode, struct {
+func toError(w http.ResponseWriter, statusCode int, erro error) {
+	toJson(w, statusCode, struct {
 		Erro string `json:"erro"`
 	}{
 		Erro: erro.Error(),
