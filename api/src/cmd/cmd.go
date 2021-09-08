@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"api/src/infrastructure"
-	"api/src/infrastructure/api"
+	"api/src/infrastructure/routes"
 	"fmt"
 	"log"
 	"net/http"
@@ -25,7 +25,7 @@ func Execute() {
 
 			if err := http.ListenAndServe(
 				fmt.Sprintf(":%d", infrastructure.HttpPortAddress),
-				api.Router(),
+				routes.Router(),
 			); err != nil {
 				panic(err)
 			}
