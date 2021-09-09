@@ -2,6 +2,7 @@ package mysql
 
 import (
 	"api/src/domain/users/entity"
+	"api/src/domain/users/service"
 	userDomain "api/src/domain/users/service"
 	"database/sql"
 
@@ -109,4 +110,27 @@ func (r UserMySQLRepository) FindById(id int) (*entity.User, error) {
 	}
 
 	return &u, nil
+}
+
+func (r UserMySQLRepository) Delete(id int) error {
+	statement, err := r.db.Prepare("DELETE from usuarios WHERE id = ?")
+
+	if err != nil {
+		return err
+	}
+
+	result, err := statement.Exec(id)
+
+	res, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if res == 0 {
+		return service.ErrUserNotFound
+	}
+
+	statement.Close()
+
+	return nil
 }

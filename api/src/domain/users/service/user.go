@@ -53,6 +53,14 @@ func (u UserService) FindById(id int) (*entity.User, error) {
 	return user, nil
 }
 
+func (u UserService) Delete(id int) error {
+	if err := u.repository.Delete(id); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (u UserService) ErrFromDomain(err error) bool {
 	domainErrors := []error{
 		ErrUserAlreadyExists,
