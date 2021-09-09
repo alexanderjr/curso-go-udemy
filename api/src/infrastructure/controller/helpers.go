@@ -9,22 +9,22 @@ import (
 
 var ErrInternalServer = errors.New("Internal Server Error")
 
-func toJson(w http.ResponseWriter, statusCode int, dados interface{}) {
+func toJson(w http.ResponseWriter, statusCode int, data interface{}) {
 	w.WriteHeader(statusCode)
 
 	if statusCode == http.StatusNoContent {
 		return
 	}
 
-	if erro := json.NewEncoder(w).Encode(dados); erro != nil {
-		log.Fatal(erro)
+	if err := json.NewEncoder(w).Encode(data); err != nil {
+		log.Fatal(err)
 	}
 }
 
-func toError(w http.ResponseWriter, statusCode int, erro error) {
+func toError(w http.ResponseWriter, statusCode int, err error) {
 	toJson(w, statusCode, struct {
 		Erro string `json:"erro"`
 	}{
-		Erro: erro.Error(),
+		Erro: err.Error(),
 	})
 }
