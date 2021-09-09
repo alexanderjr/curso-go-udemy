@@ -43,6 +43,18 @@ func (u UserService) GetAll() ([]entity.User, error) {
 	return users, nil
 }
 
+func (u UserService) Update(user entity.User) (*entity.User, error) {
+	if err := user.IsValid(); err != nil {
+		return nil, err
+	}
+
+	if err := u.repository.Update(user); err != nil {
+		return nil, err
+	}
+
+	return &user, nil
+}
+
 func (u UserService) FindById(id int) (*entity.User, error) {
 	user, err := u.repository.FindById(id)
 

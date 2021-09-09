@@ -45,12 +45,11 @@ func (u UsersController) GetAll(w http.ResponseWriter, r *http.Request) {
 func (u UsersController) Find(w http.ResponseWriter, r *http.Request) {
 	logger.Info("Begin UsersController@Save")
 
-	parametros := mux.Vars(r)
+	p := mux.Vars(r)
+	userId, errConvert := strconv.ParseUint(p["usuarioId"], 10, 64)
 
-	userId, erro := strconv.ParseUint(parametros["usuarioId"], 10, 64)
-
-	if erro != nil {
-		toError(w, http.StatusBadRequest, erro)
+	if errConvert != nil {
+		toError(w, http.StatusBadRequest, errConvert)
 		return
 	}
 
@@ -83,7 +82,54 @@ func (u UsersController) Find(w http.ResponseWriter, r *http.Request) {
 }
 
 func (u UsersController) Update(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Hello World"))
+	logger.Info("Begin UsersController@Update")
+
+	p := mux.Vars(r)
+	userId, errConvert := strconv.ParseUint(p["usuarioId"], 10, 64)
+
+	if errConvert != nil {
+		toError(w, http.StatusBadRequest, errConvert)
+		return
+	}
+
+	request, err := ioutil.ReadAll(r.Body)
+
+	if err != nil {
+		toError(w, http.StatusUnprocessableEntity, err)
+		return
+	}
+
+	var input inputRequest.UserRequest
+	if err = json.Unmarshal(request, &input); err != nil {
+		toError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	db, err := mysql.NewMySQLConnection()
+	if err != nil {
+		toError(w, http.StatusInternalServerError, err)
+		return
+	}
+	defer db.Close()
+
+	re := mysql.NewUserMySQLRepository(db)
+	service := domainService.NewUserService(re)
+
+	userAdded, err := service.Update(input.CreateDomainUserToUpdate(userId))
+
+	if err != nil {
+		logger.Error("Err: ", err)
+		if !service.ErrFromDomain(err) {
+			toError(w, http.StatusInternalServerError, ErrInternalServer)
+			return
+		}
+
+		toError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	toJson(w, http.StatusNoContent, presenter.ShowUser(*userAdded))
+	logger.Info("End UsersController@Update")
 }
 
 func (u UsersController) Delete(w http.ResponseWriter, r *http.Request) {

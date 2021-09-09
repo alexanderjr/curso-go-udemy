@@ -21,3 +21,14 @@ func (u UserRequest) CreateDomainUser() entity.User {
 		CreatedAt: time.Now(),
 	}
 }
+
+func (u UserRequest) CreateDomainUserToUpdate(id uint64) entity.User {
+	return entity.User{
+		ID:        id,
+		Name:      u.Nome,
+		Email:     u.Email,
+		Nick:      u.Nick,
+		Password:  u.Senha,
+		CreatedAt: time.Now(),
+	}
+}

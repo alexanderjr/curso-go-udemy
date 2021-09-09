@@ -50,6 +50,24 @@ func (r UserMySQLRepository) Create(user entity.User) (*entity.User, error) {
 	return &user, nil
 }
 
+func (r UserMySQLRepository) Update(user entity.User) error {
+	statement, err := r.db.Query(
+		"UPDATE usuarios set nome = ?, email = ?, nick = ? WHERE id = ?",
+		user.Name,
+		user.Email,
+		user.Nick,
+		user.ID,
+	)
+
+	if err != nil {
+		return err
+	}
+
+	statement.Close()
+
+	return nil
+}
+
 func (r UserMySQLRepository) GetAll() ([]entity.User, error) {
 	//TODO: add filter
 	rows, err := r.db.Query(
