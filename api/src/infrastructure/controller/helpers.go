@@ -11,6 +11,7 @@ var ErrInternalServer = errors.New("Internal Server Error")
 
 func toJson(w http.ResponseWriter, statusCode int, data interface{}) {
 	w.WriteHeader(statusCode)
+	w.Header().Set("content-type", "application/json")
 
 	if statusCode == http.StatusNoContent {
 		return
@@ -22,6 +23,7 @@ func toJson(w http.ResponseWriter, statusCode int, data interface{}) {
 }
 
 func toError(w http.ResponseWriter, statusCode int, err error) {
+	w.Header().Set("content-type", "application/json")
 	toJson(w, statusCode, struct {
 		Erro string `json:"erro"`
 	}{

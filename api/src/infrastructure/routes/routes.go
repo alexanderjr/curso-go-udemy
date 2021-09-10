@@ -10,8 +10,6 @@ import (
 func Router() *mux.Router {
 	r := mux.NewRouter()
 
-	r.Headers("Content-type", "application/json")
-
 	usersController := controller.NewUsersController()
 	r.HandleFunc("/usuarios", usersController.GetAll).Methods(http.MethodGet)
 	r.HandleFunc("/usuarios", usersController.Save).Methods(http.MethodPost)
