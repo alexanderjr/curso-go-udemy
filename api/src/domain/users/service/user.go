@@ -1,6 +1,7 @@
 package service
 
 import (
+	"api/src/domain/users/contract"
 	"api/src/domain/users/entity"
 	"api/src/domain/users/repository"
 	"errors"
@@ -13,16 +14,24 @@ var (
 
 type UserService struct {
 	repository repository.UserRepository
+	encriptor  contract.Encryptor
 }
 
-func NewUserService(r repository.UserRepository) UserService {
-	return UserService{repository: r}
+func NewUserService(r repository.UserRepository, e contract.Encryptor) UserService {
+	return UserService{repository: r, encriptor: e}
 }
 
 func (u UserService) Create(user entity.User) (*entity.User, error) {
 	if err := user.IsValid(); err != nil {
 		return nil, err
 	}
+
+	hashValue, err := u.encriptor.ToHash(user.Password)
+	if err != nil {
+		return nil, err
+	}
+
+	user.ToHashPassword(string(hashValue))
 
 	userAdded, err := u.repository.Create(user)
 

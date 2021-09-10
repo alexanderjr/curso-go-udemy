@@ -42,3 +42,7 @@ func (u User) IsValid() error {
 
 	return nil
 }
+
+func (u *User) ToHashPassword(hashedValue string) {
+	u.Password = hashedValue
+}

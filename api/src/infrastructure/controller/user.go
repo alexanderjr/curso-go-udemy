@@ -4,6 +4,7 @@ import (
 	domainService "api/src/domain/users/service"
 	"api/src/infrastructure/controller/presenter"
 	inputRequest "api/src/infrastructure/controller/request"
+	"api/src/infrastructure/encrypt"
 	"api/src/infrastructure/mysql"
 	"encoding/json"
 	"errors"
@@ -27,7 +28,7 @@ func (u UsersController) GetAll(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 
 	re := mysql.NewUserMySQLRepository(db)
-	service := domainService.NewUserService(re)
+	service := domainService.NewUserService(re, encrypt.BCryptConcrete{})
 
 	users, err := service.GetAll()
 
@@ -61,7 +62,7 @@ func (u UsersController) Find(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 
 	re := mysql.NewUserMySQLRepository(db)
-	service := domainService.NewUserService(re)
+	service := domainService.NewUserService(re, encrypt.BCryptConcrete{})
 
 	user, err := service.FindById(int(userId))
 
@@ -113,7 +114,7 @@ func (u UsersController) Update(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 
 	re := mysql.NewUserMySQLRepository(db)
-	service := domainService.NewUserService(re)
+	service := domainService.NewUserService(re, encrypt.BCryptConcrete{})
 
 	userAdded, err := service.Update(input.CreateDomainUserToUpdate(userId))
 
@@ -152,7 +153,7 @@ func (u UsersController) Delete(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 
 	re := mysql.NewUserMySQLRepository(db)
-	service := domainService.NewUserService(re)
+	service := domainService.NewUserService(re, encrypt.BCryptConcrete{})
 
 	err = service.Delete(int(userId))
 
@@ -195,7 +196,7 @@ func (u UsersController) Save(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 
 	re := mysql.NewUserMySQLRepository(db)
-	service := domainService.NewUserService(re)
+	service := domainService.NewUserService(re, encrypt.BCryptConcrete{})
 
 	userAdded, err := service.Create(input.CreateDomainUser())
 
