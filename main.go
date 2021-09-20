@@ -2,11 +2,13 @@ package main
 
 import "fmt"
 
-func write(text string, numbers ...int) {
-	for c := 0; c < len(numbers); c++ {
-		fmt.Printf("%s %d \n", text, numbers[c])
-	}
+func studentIsApproved(avg int) bool {
+	//a execucacao dessa funcao ira para o final da funcao, portanto executada antes do return
+	defer fmt.Println("O resultado sera mostrado a seguir")
+
+	return avg >= 5
 }
+
 func main() {
-	write("Hello World", 1, 2, 3)
+	fmt.Print(studentIsApproved(5))
 }
