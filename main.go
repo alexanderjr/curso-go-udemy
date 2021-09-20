@@ -2,14 +2,21 @@ package main
 
 import "fmt"
 
-var globalValue int
+type user struct {
+	name string
+	age  int
+}
 
-func init() {
-	fmt.Print("Print init function por arquivo")
-	globalValue = 10
+func (u user) isAdult() bool {
+	return u.age >= 18
+}
+
+func (u *user) incrementAge() {
+	u.age++
 }
 
 func main() {
-	fmt.Print("Main")
-	fmt.Print(globalValue)
+	u := user{"Alexander", 17}
+	u.incrementAge()
+	fmt.Print(u, u.isAdult())
 }
