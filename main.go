@@ -2,12 +2,14 @@ package main
 
 import "fmt"
 
-func toNegative(n *int) {
-	*n = *n * -1
+var globalValue int
+
+func init() {
+	fmt.Print("Print init function por arquivo")
+	globalValue = 10
 }
 
 func main() {
-	var n int = 10
-	toNegative(&n)
-	fmt.Print(n)
+	fmt.Print("Main")
+	fmt.Print(globalValue)
 }
